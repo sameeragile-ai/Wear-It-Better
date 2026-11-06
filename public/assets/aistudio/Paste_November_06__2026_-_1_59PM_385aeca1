@@ -1,0 +1,291 @@
+# WEAR IT BETTER — COMPLETE WEBSITE REVAMP (LIGHT GRADIENT THEME, FULLY RESPONSIVE)
+
+Build a complete, production-ready e-commerce website for "Wear It Better", a luxury brand selling handcrafted menswear and an in-house line of artisanal perfumes. This is a full revamp of an existing site. The entire site must use a LIGHT, airy, premium colour scheme enriched with elegant soft GRADIENTS, look like a high-end fashion studio designed it (not a generic template), be fully responsive on every screen size from 320px phones to 2560px monitors, and every button, link and interaction must be fully functional.
+
+==================================================
+1. TECH STACK (follow exactly)
+==================================================
+- React 18 + TypeScript + Vite + Tailwind CSS.
+- lucide-react for icons and framer-motion for animation. No other UI libraries.
+- File structure:
+  - index.html, index.tsx, App.tsx, index.css
+  - types.ts (Product, CartItem, Currency, etc.)
+  - constants.ts (products, categories, testimonials, FAQs, currency rates, nav data)
+  - context/StoreContext.tsx (cart, wishlist, currency, recent searches, toasts — persisted to localStorage)
+  - hooks/useScrollState.ts ({ isScrolled, progress }), hooks/useScrollSpy.ts, hooks/useReveal.ts, hooks/useLockBody.ts, hooks/useMediaQuery.ts
+  - components/ — one file per section and per UI piece
+- Include package.json, vite.config.ts, tailwind.config, postcss.config and vercel.json so the project runs with `npm install && npm run build` and deploys to Vercel with zero environment variables. No API keys, no backend.
+
+==================================================
+2. BRAND
+==================================================
+- Name: Wear It Better. Logo: gold-gradient "W" monogram in a thin circle + serif wordmark.
+- Positioning: heritage South Asian craftsmanship (silk kurtas, kameez shalwar, embroidered waistcoats) meets modern tailoring, plus a quiet-luxury perfume line in minimalist glass bottles.
+- Audience: style-conscious men 25–55, gift buyers, fragrance collectors in the US, UK and Pakistan.
+- Tone: refined, confident, understated. Short sentences. No hype words.
+- Boutique: 740 Fifth Avenue, Suite 1200, New York, NY 10019. Mon–Sat 10am–7pm. concierge@wearitbetter.com
+
+==================================================
+3. LIGHT DESIGN SYSTEM
+==================================================
+The whole site is light. No black or dark section backgrounds anywhere (no dark hero, no dark footer, no dark mobile menu). Contrast comes from typography, warm neutrals, soft gradients, soft shadows and gold accents.
+
+3.1 Base colors (define as Tailwind theme tokens)
+- Ivory #FBF8F3 — main page background
+- Porcelain #FFFFFF — cards, drawers, modals, navbar glass base
+- Sand #F3EDE3 — alternating section backgrounds
+- Linen #EAE2D5 — borders, dividers, input outlines
+- Champagne #E9D7AE — soft gold tints, highlights, hover backgrounds
+- Blush #F4E1DA — soft rose tint used inside gradients
+- Mist #E6ECEA — soft sage-grey tint used inside gradients
+- Gold #B08A3E — primary accent
+- Deep gold #8A6A2B — gold TEXT on light backgrounds (meets contrast)
+- Rose gold #C99283 — secondary accent in gradients
+- Charcoal #2B2621 — headings and body text (never pure black)
+- Taupe #7A6F63 — secondary text, captions
+- Rosewood #9C4A4F — rare accent (sale/"Almost gone" badges, error states)
+
+3.2 GRADIENT SYSTEM (define every gradient as a named CSS variable / Tailwind utility and reuse them consistently)
+- --grad-gold (primary buttons, cart badge, progress bars, active indicators):
+  linear-gradient(135deg, #B08A3E 0%, #D4B06A 50%, #E9D7AE 100%)
+- --grad-gold-hover (button hover state — shift, don't jump):
+  linear-gradient(135deg, #9C7832 0%, #C9A257 50%, #DCC08A 100%)
+  Implement the hover with background-size: 200% and animated background-position so the gradient flows smoothly.
+- --grad-rose-gold (fragrance "For Her" badges, accents, decorative shapes):
+  linear-gradient(135deg, #C99283 0%, #E4B9A8 50%, #F4E1DA 100%)
+- --grad-heading (gradient TEXT for H1/H2 headings — use sparingly, max one heading per section):
+  linear-gradient(120deg, #2B2621 0%, #5A4630 45%, #8A6A2B 100%) with background-clip: text. Must still pass AA contrast; never apply to body text.
+- --grad-hero (hero background — soft mesh effect):
+  layered radial gradients: radial-gradient(at 15% 20%, #F4E1DA 0px, transparent 50%), radial-gradient(at 85% 15%, #E9D7AE 0px, transparent 45%), radial-gradient(at 70% 85%, #E6ECEA 0px, transparent 50%), base #FBF8F3. The blobs drift very slowly (30s loop) for a living, silky feel.
+- --grad-section-warm (alternating section backgrounds):
+  linear-gradient(180deg, #FBF8F3 0%, #F3EDE3 100%)
+- --grad-section-cool (some sections for variety):
+  linear-gradient(180deg, #FBF8F3 0%, #EEF1EE 100%)
+- --grad-champagne-panel (newsletter panel, Discovery Set banner, promo blocks):
+  linear-gradient(120deg, #F4E1DA 0%, #F3E6CC 50%, #E9D7AE 100%)
+- --grad-card-surface (cards and frosted panels):
+  linear-gradient(160deg, rgba(255,255,255,0.95) 0%, rgba(251,248,243,0.85) 100%)
+- --grad-border (1px gradient borders on featured cards, navbar pill, focused inputs, modals):
+  conic or linear gradient #B08A3E → #E9D7AE → #C99283 at ~45% opacity, implemented with a mask or padding-box/border-box technique.
+- --grad-image-overlay (caption areas on images, keeps text readable):
+  linear-gradient(180deg, transparent 40%, rgba(251,248,243,0.92) 100%)
+- --grad-footer:
+  linear-gradient(180deg, #F3EDE3 0%, #EFE4D3 100%)
+- --grad-shimmer (skeleton loaders while images load):
+  linear-gradient(90deg, #F3EDE3 0%, #FBF8F3 50%, #F3EDE3 100%) animated left to right.
+
+Gradient rules:
+- Gradients must feel soft, silky and luxurious — never neon, never harsh rainbow, never high-saturation.
+- Every gradient stays within the light palette above; text on any gradient must meet WCAG AA.
+- Use gradients with purpose: primary actions, key headings, hero, featured blocks and section rhythm. Keep product photos, body text areas and forms calm.
+- Decorative elements: a few large, blurred gradient orbs (gold, rose and mist, filter: blur(80px), ~30% opacity) placed behind the hero, Atelier and newsletter sections, positioned so they never cause horizontal scroll.
+- Gradient dividers: thin 1px lines fading from transparent → gold → transparent between major sections.
+- Icons: thin-line icons can use a gold gradient stroke via an SVG linearGradient.
+
+3.3 Buttons
+- Primary: --grad-gold background, charcoal text, fully rounded, soft gold glow on hover (0 10px 30px -10px rgba(176,138,62,0.45)), smooth flowing gradient shift on hover, slight lift.
+- Secondary: transparent with --grad-border outline and charcoal text; on hover fills with --grad-champagne-panel.
+- Text links: deep-gold with a gradient underline that draws in from the left.
+
+3.4 Shadows: soft and warm only, e.g. 0 12px 40px -16px rgba(120,90,40,0.18). No heavy grey shadows.
+
+3.5 Typography (Google Fonts)
+- "Cormorant Garamond" (400/500/600 + italic) for headings; "Manrope" (400/500/600) for body and UI.
+- Fluid type with clamp(): H1 clamp(2.5rem, 6vw, 5.5rem), H2 clamp(2rem, 4vw, 3.5rem), body clamp(0.95rem, 1vw + 0.6rem, 1.0625rem). Body line length under 72 characters, line-height 1.65.
+
+3.6 Layout
+- Alternate --grad-section-warm, --grad-section-cool and plain Ivory backgrounds for rhythm; mix full-bleed imagery, asymmetric image/text splits and product grids. Generous whitespace. Don't make every section identical rounded cards.
+- Radius hierarchy: buttons/pills fully rounded, product images 16px, large feature panels 24px.
+- Subtle paper-grain overlay (CSS/SVG noise ~3% opacity) on Ivory sections.
+
+3.7 Images
+- Unsplash URLs (images.unsplash.com/...?w=900&q=80&auto=format), bright, light-toned photography — cream and neutral backdrops, natural daylight, beige/ivory/light-grey tailoring, perfume bottles on stone, linen or marble. Avoid dark, moody photos. NEVER show third-party brand logos or bottles (no Chanel, Dior, Tom Ford, etc.).
+- <SmartImage> component: lazy loading, fixed aspect ratio, srcset (400/800/1200/1600), --grad-shimmer skeleton while loading, soft fade-in, and an onError fallback (--grad-champagne-panel with a gold "W" monogram) so no image ever looks broken.
+
+==================================================
+4. PAGE LOADER & ANNOUNCEMENT BAR
+==================================================
+- Loader: --grad-hero background, gold-gradient "W" monogram draws in (SVG stroke with linearGradient), then fades out after ~1.2s. Once per session (sessionStorage).
+- Announcement bar (36px, --grad-champagne-panel background, charcoal text, in normal flow above the navbar): messages rotate every 4s with a fade — "100% authentic artisanal fragrances" / "Complimentary worldwide express shipping over $250" / "Winter Edition: exclusive menswear & studio perfumes — Explore scents" (link scrolls to fragrances). Close (×) hides it for the session. Under 380px show one shorter message per slide.
+
+==================================================
+5. NAVBAR (signature element: sticky, light glass, premium)
+==================================================
+It must feel like the navigation of a high-end fashion house: smooth, precise and alive, never noisy.
+
+5.1 Scroll behaviour (always visible, never hides)
+- position: fixed; z-index above everything except modals, drawers and the loader. Sits directly below the announcement bar, then attaches to top: 0 once scrolled.
+- STATE 1 — top of page (scrollY < 24px): full-width, transparent background, charcoal text, no border. Height 88px desktop / 72px mobile.
+- STATE 2 — scrolled (scrollY ≥ 24px): morph (Framer Motion spring, stiffness 260, damping 30) into a FLOATING LIGHT GLASS PILL:
+  - max-width 1180px, centred, margin-top 12px, border-radius 9999px (tablet/mobile: inset 10px each side, radius 20px).
+  - Frosted light glass: background linear-gradient(135deg, rgba(255,255,255,0.72), rgba(251,248,243,0.6)), backdrop-filter: blur(18px) saturate(160%) with -webkit- prefix.
+  - 1px animated --grad-border (gold → champagne → rose gold) at ~45% opacity; conic-gradient slowly rotating on an 8s loop.
+  - Shadow: 0 10px 40px -12px rgba(120,90,40,0.22), 0 2px 8px rgba(43,38,33,0.06).
+  - Height 64px (mobile 58px); logo scales 1 → 0.85; wordmark fades out leaving the monogram.
+  - Width, radius, margin, height and logo scale animate together as one shape — never a jump.
+- Scrolling back to the top morphs back to State 1.
+- Over full-bleed image areas, add a subtle white-to-transparent gradient behind the State 1 bar so charcoal text stays readable.
+- Use useScroll + useMotionValueEvent (or rAF-throttled listener). No layout thrashing.
+
+5.2 Desktop (≥ 1024px)
+- LEFT: logo. A soft gold-to-rose gradient glow ring behind the monogram pulses every few seconds. Hover: monogram rotates 8°, glow brightens. Click: smooth scroll to top.
+- CENTRE links: Menswear, Fragrances, Atelier, Reviews, Contact.
+  - Hover: a champagne-gradient glass pill glides behind the hovered link (Framer Motion layoutId).
+  - Active section (scroll spy): --grad-heading gradient text + small 2px --grad-gold dot beneath.
+  - "Menswear" → MEGA MENU on hover/focus (120ms hover-intent): white glass panel with --grad-border, fade + scale 0.98 → 1. Left: 3 category cards with photo, name and item count (Kurtas & Waistcoats, Suits & Jackets, Kameez Shalwar) — click scrolls to the shop and applies the filter; "View all menswear" link. Right: featured product card on --grad-champagne-panel (Ivory Silk Kurta & Waistcoat Set, price in selected currency) with working "Quick view".
+  - "Fragrances" → smaller dropdown: For Him, For Her, Unisex, Discovery Set — each with a gradient icon and "from $145" (converted). Click scrolls to fragrances and applies the filter.
+- RIGHT:
+  - Currency selector (USD / GBP / EUR / PKR), compact glass dropdown.
+  - Search button "Search ⌘K" (Ctrl K on Windows) → full-screen COMMAND SEARCH: --grad-hero frosted backdrop, large input with --grad-border focus ring and animated typing placeholder ("Search oud, kurta, waistcoat…"), instant results grouped into Menswear / Fragrances / Scent notes, arrow-key navigation, Enter opens quick view, Esc closes, recent searches, empty state "No matches — try 'oud' or 'kurta'".
+  - Wishlist heart with --grad-rose-gold count badge → wishlist drawer.
+  - Cart icon with --grad-gold count badge (charcoal number). On add: badge pops (1 → 1.4 → 1), icon shakes slightly, a gold gradient glow ring ripples out. Hover: mini preview (last 3 items, subtotal, "View bag"). Click: cart drawer.
+  - "Sign in" text link, gradient underline draws in from the left → demo sign-in modal (validation, "Demo only" note).
+  - "Book a fitting" pill: --grad-gold, light shine sweep every 6s, magnetic hover (max 6px), flowing gradient + lift + soft glow on hover. Scrolls to Book a Fitting.
+- 2px --grad-gold SCROLL PROGRESS BAR along the navbar's bottom edge (inside the pill when floating, clipped to its rounded ends).
+
+5.3 Small laptop (1024–1279px): reduce link gaps, move "Sign in" into an account icon, keep everything on one line with no wrapping.
+
+5.4 Tablet (768–1023px): logo left; links condensed to Menswear, Fragrances, Atelier; search, cart and hamburger right. "Book a fitting" becomes a compact icon + "Fitting" gradient pill.
+
+5.5 Mobile (< 768px) — must be flawless
+- Bar: monogram left; search, cart (badge) and hamburger right. Tap targets ≥ 44×44px. Light glass pill when scrolled (inset 10px, radius 20px), respecting env(safe-area-inset-top).
+- HAMBURGER: two charcoal lines morphing smoothly into an X.
+- MOBILE MENU: full-screen LIGHT overlay with --grad-hero background (slowly drifting gold, rose and mist gradient blobs) and faint paper grain, revealed by a circular clip-path expanding from the hamburger.
+  - Large Cormorant Garamond links (~40px, charcoal) stagger in from below 60ms apart, each with a small taupe index number (01, 02, 03…).
+  - Tapping a link: quick champagne gradient highlight, menu closes with reverse clip-path, then smooth-scrolls to the section.
+  - Below: swipeable row of category chips with --grad-border (Kurtas, Waistcoats, Suits, For Him, For Her, Unisex — each applies its filter; active chip fills with --grad-gold), currency selector, "Sign in", full-width --grad-gold "Book a fitting" button, social icons (Instagram, Facebook, YouTube).
+  - Lock body scroll; close on Esc, swipe-down or link tap; return focus to the hamburger. Content scrolls internally on short screens (landscape phones).
+- MOBILE BOTTOM ACTION BAR: after scrolling past the hero, a floating white gradient-glass bar with --grad-border slides up with Home, Shop, Wishlist (badge), Bag (badge); active icon uses a gold gradient. Respects env(safe-area-inset-bottom); hides while any drawer, search or the mobile menu is open. Add bottom page padding so it never covers content.
+
+5.6 Entrance: after the loader, navbar enters from above (y -24 → 0, opacity 0 → 1); logo, links, then right-side buttons stagger in 40ms apart.
+
+5.7 Accessibility
+- Semantic <header> and <nav aria-label="Main">; aria-expanded/aria-controls on hamburger and dropdowns; "Skip to content" as the first focusable element.
+- Full keyboard support (Tab, focus-open dropdowns, arrow keys in menus, Esc closes all). Visible deep-gold focus rings. WCAG AA contrast in every state.
+- prefers-reduced-motion: keep glass/colour/gradient changes, replace morphing, sliding, shine, magnetic, drifting blobs and rotating border with simple fades.
+- No backdrop-filter support → solid rgba(255,255,255,0.96).
+- Components: Navbar, NavLinks, MegaMenu, FragranceDropdown, CommandSearch, CartButton, CurrencySelect, MobileMenu, MobileBottomBar.
+
+==================================================
+6. PAGE SECTIONS (in this order)
+==================================================
+6.1 HERO SLIDER (--grad-hero mesh background with slowly drifting blurred gold, rose and mist orbs; min-height 100svh desktop, auto height on mobile)
+- 3 slides: "Artisanal Parfumerie" (perfume focus), "Heritage, Tailored" (menswear focus), "The Winter Edition" (seasonal). Each slide subtly shifts the mesh gradient tint (perfume → rose-gold, menswear → champagne, winter → mist).
+- Each: headline in large Cormorant Garamond using --grad-heading, one-line description (taupe), two CTAs ("Shop perfumes" --grad-gold / "Explore menswear" gradient-outline), and a bright image composition on the right — a large light-toned tailoring photo with a smaller perfume-bottle photo overlapping it (with --grad-border frame), plus a large soft gradient circle (--grad-rose-gold → --grad-champagne-panel) behind.
+- Working prev/next arrows, dots (active dot uses --grad-gold), autoplay every 6s with a thin --grad-gold progress line, pause on hover, swipe on touch. Crossfade with a slow image zoom.
+- One orchestrated entrance after the loader: headline, text, CTAs and images stagger in.
+- Mobile: text first, image composition below, CTAs full width and stacked.
+
+6.2 TRUST STRIP (white with gradient divider lines top and bottom): marquee of brand promises — Hand-finished in small batches / Free express shipping over $250 / 30-day returns / Authentic ingredients — separated by small gold-gradient diamond icons. Pauses on hover; static under reduced motion.
+
+6.3 PRIMARY COLLECTIONS (Ivory): 3 tall image cards — Menswear Apparel, Men's Perfumes, Women's Perfumes — with --grad-image-overlay and a frosted caption (name, one line, "Shop collection"). On hover a --grad-border appears and the image zooms gently. Click scrolls to the correct shop AND applies the filter. Desktop 3 columns; tablet 3 shorter; mobile horizontal snap carousel with a peek of the next card.
+
+6.4 LUXURY MENSWEAR SHOP (--grad-section-warm): heading with --grad-heading + filter tabs (All / Kurtas & Waistcoats / Suits & Jackets / Kameez Shalwar) with a sliding --grad-gold active indicator; animated grid re-ordering (Framer Motion layout). Tabs scroll horizontally on mobile.
+
+6.5 STUDIO FRAGRANCES SHOP (--grad-section-cool): heading + filter tabs (All / For Him / For Her / Unisex). White --grad-card-surface cards; badges: For Him = --grad-gold, For Her = --grad-rose-gold, Unisex = mist gradient. Each image sits on a soft tinted gradient backdrop matching its scent family. Include a "Discovery Set" promo banner on --grad-champagne-panel with blurred gradient orbs ($65, 5 × 10ml samples, working Add to bag).
+
+6.6 ATELIER — CRAFTSMANSHIP (Ivory with a blurred gold orb behind the text): asymmetric split — large bright image left with a --grad-border offset frame, story right about hand-stitched collars, embroidered linings and tailored contours. 3 brand facts with gradient numbers ("40+ hours per bespoke suit", "Small-batch perfumes", "Since 2014"). CTA "Book a fitting". Stacks on tablet/mobile.
+
+6.7 BESPOKE PROCESS (--grad-section-warm): 4 sequential steps — Book a fitting → Choose your fabric → Hand-tailoring → Final fitting & delivery — on white cards with gradient step numbers, connected by a thin --grad-gold line that draws in on scroll (horizontal on desktop, vertical on mobile).
+
+6.8 WHY WEAR IT BETTER (Ivory): 4 benefits with gold-gradient-stroke line icons inside soft champagne gradient circles — Authentic ingredients, Hand finishing, Free express shipping over $250, 30-day returns. 4 columns desktop, 2 tablet, 2 mobile (1 under 380px).
+
+6.9 COLLECTOR TESTIMONIALS (--grad-section-cool): carousel of white cards with --grad-border on the centered card; gradient stars, title, quote, name, "Verified buyer", product purchased. Arrows, dots and swipe. 3 visible desktop, 2 tablet, 1 mobile.
+- Tariq Mansoor — "Impeccable kurta cut" — Ivory Silk Kurta & Waistcoat Set
+- Julian Vance — "Dark Elixir is exceptional" — lasts 10+ hours
+- Hamza Shah — "Masterclass in packaging" — fast shipping, sleek presentation
+- Daniel Okafor — "Tailoring that actually fits" — Architectural Tailored Suit
+- Sara Malik — "My new signature scent" — Golden Neroli
+
+6.10 FAQ (Ivory): accordion, one open at a time, animated height, gradient divider lines; the open item gets a soft champagne gradient background and a gold-gradient icon.
+
+6.11 JOIN THE INNER CIRCLE (--grad-champagne-panel rounded panel with blurred gold and rose orbs): heading with --grad-heading, newsletter with email validation, loading state, success "You're on the list." Duplicate submissions show a friendly note. Input and --grad-gold button side by side on desktop, stacked on mobile.
+
+6.12 BOOK A FITTING / CONTACT (--grad-section-warm): form on a white card with --grad-border (name, email, phone, service dropdown: Bespoke suit / Kurta & waistcoat / Fragrance consultation / Other, preferred date, message); inputs get a gradient focus ring; inline validation, loading state and success message marked as a demo. Beside it: boutique address, hours, email, phone, and a styled map placeholder panel on --grad-hero with a "Get directions" link (Google Maps search URL). Two columns desktop, stacked on tablet/mobile.
+
+6.13 FOOTER (--grad-footer, gradient divider on top, charcoal text): gradient logo + brand blurb; columns Collections / Client Care / Boutique Atelier (all links work — scroll to sections or open modals); social icons in champagne gradient circles with real links; Privacy Policy and Terms open simple modals; © 2026 Wear It Better. 4 columns desktop, 2 tablet, collapsible accordion columns on mobile. Floating back-to-top button (white with --grad-border and gold-gradient icon) appears after scrolling.
+
+==================================================
+7. PRODUCTS (put in constants.ts)
+==================================================
+Menswear (sizes S, M, L, XL, XXL):
+- Ivory Silk Kurta & Waistcoat Set — $210 — Kurtas & Waistcoats — badge "New arrival" — 4.9★ (18) — fine blended silk, hand-worked embroidered collar
+- Architectural Tailored Suit — $320 — Suits & Jackets — 4.7★ (29) — Italian virgin wool, precision-structured shoulders
+- Supple Lambskin Jacket — $390 — Suits & Jackets — 4.8★ (41) — soft tan finish, brushed metallic hardware
+- Textured Cotton Kurta Shirt — $115 — Kurtas & Waistcoats — 4.6★ (12) — mandarin collar, breathable handwoven cotton
+- Champagne Brocade Waistcoat — $175 — Kurtas & Waistcoats — 4.8★ (22)
+- Stone Kameez Shalwar — $165 — Kameez Shalwar — 4.7★ (34)
+- Beige Double-Breasted Blazer — $285 — Suits & Jackets — 4.9★ (16)
+- Sage Linen Kameez Shalwar — $145 — Kameez Shalwar — 4.5★ (19)
+
+Fragrances (50ml at listed price, 100ml at +$60):
+- Studio Blanc — $145 — For Him — crisp cedar & vetiver — bergamot, smoked vetiver, white amber
+- Dark Elixir — $170 — Unisex, badge "Intense" — smoked leather & tobacco — incense, black pepper, tobacco leaf
+- Mystique Rose — $160 — For Her — Bulgarian rose & amber — velvet rose, saffron, vanilla pod
+- Spiced Rage — $150 — For Him — cardamom & sandalwood — nutmeg, Australian sandalwood
+- Black Phantom Oud — $195 — Unisex, badge "Almost gone" — Cambodian oud — agarwood, tonka bean, amber
+- Golden Neroli — $155 — For Her — orange blossom & amber — Tunisian neroli, jasmine, amber balm
+- Discovery Set — $65 — 5 × 10ml (promo banner item)
+
+==================================================
+8. SHOPPING FUNCTIONALITY (every item must work)
+==================================================
+- Product card (--grad-card-surface): image with subtle hover zoom and --grad-border on hover, wishlist heart (fills with rose-gold gradient when active), gradient rating stars, "Quick view", "Add to bag" (--grad-gold). On touch devices, actions are always visible (no hover-only controls). Menswear "Add to bag" opens quick view if no size is chosen.
+- Quick-view modal: large image on a soft gradient backdrop, description, rating, size selector (selected size fills with --grad-gold; required, error if missing), quantity stepper, Add to bag, Add to wishlist. Esc/backdrop closes; focus trapped. Centered modal on desktop; full-height bottom sheet with drag-to-close on mobile.
+- Add to bag → toast (white with --grad-border) "Added to bag" with "View bag" action + navbar cart animation. Same product + same size merges quantity.
+- Cart drawer (white, from right; full-width on mobile): image, name, size, unit price, qty +/−, remove (with undo toast), "Clear bag" (confirm), free-shipping progress bar filled with --grad-gold ("$40 away from free shipping"), subtotal, shipping (free over $250, else $15), total, --grad-gold "Checkout". Sticky totals footer. Empty state with "Start shopping".
+- Wishlist drawer: saved items, "Move to bag" (asks for size if needed), remove, empty state.
+- Currency selector converts every price live (USD 1, GBP 0.79, EUR 0.92, PKR 280) with Intl.NumberFormat.
+- Demo checkout modal (full-screen on mobile), 3 steps with a --grad-gold progress indicator: Contact → Shipping address → Review & place order. Validate each step; order summary visible (collapsible on mobile). Final screen: animated gold-gradient checkmark, order number (e.g. WIB-48213), items summary, and "This is a demo checkout. No payment was taken." Placing the order clears the cart.
+- Cart, wishlist, currency and recent searches persist in localStorage.
+
+==================================================
+9. MOTION
+==================================================
+- One orchestrated moment: loader → navbar entrance → hero stagger.
+- Slow ambient gradient drift in the hero and mobile menu only (30s loops, very subtle).
+- Restrained fade-up reveals on sections via IntersectionObserver (once only, small distance).
+- Smooth flowing gradient shifts on button hover; smooth drawer, modal, accordion, tab and grid-filter transitions.
+- Everything respects prefers-reduced-motion.
+
+==================================================
+10. FULL RESPONSIVENESS (critical — test every size)
+==================================================
+The site must look intentionally designed at EVERY width, not just stretch or squash.
+
+Breakpoints and targets:
+- 320–374px (small phones, iPhone SE): single-column everywhere except product grids (2 columns, compact cards), 16px side padding, smaller hero headline via clamp, no text overflow or cut-off buttons.
+- 375–639px (standard phones): 20px side padding; product grids 2 columns; stacked CTAs; bottom action bar active.
+- 640–767px (large phones / small tablets portrait): 24px padding; collections still carousel; testimonials 1 card with peek.
+- 768–1023px (tablets): 32px padding; menswear 3 columns, fragrances 2; split sections stack image over text; tablet navbar.
+- 1024–1279px (small laptops): 40px padding; menswear 4 columns, fragrances 3; compact desktop navbar.
+- 1280–1535px (laptops/desktops): container max-width 1280px.
+- 1536–2560px (large and ultra-wide): container max-width 1440px, centered; type scales up via clamp but caps out; gradient backgrounds and orbs extend full width while content stays contained; never stretch content edge to edge except intentional full-bleed images.
+
+Rules:
+- Mobile-first Tailwind classes; fluid spacing and type with clamp().
+- No horizontal scroll at any width (overflow-x: clip on html/body; check every carousel, marquee, gradient orb, mega menu and modal).
+- Gradient orbs scale down and reduce blur on mobile for performance.
+- Use 100svh/100dvh instead of 100vh so mobile browser bars don't cut content.
+- Landscape phones (e.g. 844×390): hero, mobile menu, modals and drawers must still fit and scroll internally.
+- Images: responsive srcset/sizes, consistent aspect ratios (products 4:5, collections 3:4, hero adaptive), object-fit: cover, never distorted.
+- Touch targets ≥ 44px; inputs at 16px font to prevent iOS zoom; no hover-only functionality on touch devices.
+- Respect safe-area insets (notches, home indicator) on navbar, bottom bar, drawers and modals.
+- Text never overflows: long product names wrap or clamp to 2 lines; prices and buttons never collide.
+- Modals become bottom sheets or full-screen on mobile; drawers become full-width under 480px.
+- Test in Chrome, Safari (iOS and macOS), Firefox and Edge (include -webkit- prefixes for background-clip: text and backdrop-filter).
+
+==================================================
+11. PERFORMANCE & ACCESSIBILITY
+==================================================
+- Semantic HTML, alt text on all images, aria-labels on icon buttons, visible focus rings, focus trapped in modals/drawers, WCAG AA contrast (gold text uses Deep gold #8A6A2B; gradient text always dark enough; never light gold text on white).
+- SEO: <title>Wear It Better — Luxury Menswear & Artisanal Perfumes</title>, meta description, Open Graph tags, theme-color #FBF8F3, inline SVG favicon of the gold-gradient "W".
+- Performance: gradients via CSS only (no gradient images); animate gradient orbs with transform/opacity only; lazy-load below-the-fold images, eager-load the first hero image; memoize filtered lists and context values; passive scroll listeners; no unnecessary re-renders.
+
+==================================================
+12. OUTPUT RULES
+==================================================
+- Generate ALL files completely. No placeholders, no "// rest of code", no TODOs, no lorem ipsum.
+- No dead buttons or links. Anything that can't be real (payment, sign-in, form submission) must be a clearly labeled, fully working demo.
+- The entire site must stay light-themed with soft gradients — no dark section backgrounds, no harsh or neon gradients.
+- Make sure the project compiles with zero TypeScript errors and builds for Vercel before finishing.

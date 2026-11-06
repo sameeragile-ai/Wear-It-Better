@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-ivory: #FBF8F3;
+    --color-porcelain: #FFFFFF;
+    --color-sand: #F3EDE3;
+    --color-linen: #EAE2D5;
+    --color-champagne: #E9D7AE;
+    --color-blush: #F4E1DA;
+    --color-mist: #E6ECEA;
+    --color-gold: #B08A3E;
+    --color-deep-gold: #8A6A2B;
+    --color-rose-gold: #C99283;
+    --color-charcoal: #2B2621;
+    --color-taupe: #7A6F63;
+    --color-rosewood: #9C4A4F;
+
+    /* Named Gradients */
+    --grad-gold: linear-gradient(135deg, #B08A3E 0%, #D4B06A 50%, #E9D7AE 100%);
+    --grad-gold-hover: linear-gradient(135deg, #9C7832 0%, #C9A257 50%, #DCC08A 100%);
+    --grad-rose-gold: linear-gradient(135deg, #C99283 0%, #E4B9A8 50%, #F4E1DA 100%);
+    --grad-heading: linear-gradient(120deg, #2B2621 0%, #5A4630 45%, #8A6A2B 100%);
+    --grad-hero: radial-gradient(at 15% 20%, #F4E1DA 0px, transparent 50%), radial-gradient(at 85% 15%, #E9D7AE 0px, transparent 45%), radial-gradient(at 70% 85%, #E6ECEA 0px, transparent 50%), #FBF8F3;
+    --grad-section-warm: linear-gradient(180deg, #FBF8F3 0%, #F3EDE3 100%);
+    --grad-section-cool: linear-gradient(180deg, #FBF8F3 0%, #EEF1EE 100%);
+    --grad-champagne-panel: linear-gradient(120deg, #F4E1DA 0%, #F3E6CC 50%, #E9D7AE 100%);
+    --grad-card-surface: linear-gradient(160deg, rgba(255,255,255,0.95) 0%, rgba(251,248,243,0.85) 100%);
+    --grad-border: linear-gradient(135deg, rgba(176,138,62,0.45) 0%, rgba(233,215,174,0.45) 50%, rgba(201,146,131,0.45) 100%);
+    --grad-image-overlay: linear-gradient(180deg, transparent 40%, rgba(251,248,243,0.92) 100%);
+    --grad-footer: linear-gradient(180deg, #F3EDE3 0%, #EFE4D3 100%);
+    --grad-shimmer: linear-gradient(90deg, #F3EDE3 0%, #FBF8F3 50%, #F3EDE3 100%);
+  }
+
+  html, body {
+    background-color: var(--color-ivory);
+    color: var(--color-charcoal);
+    font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+}
+
+/* Fluid Heading and Text Utilities */
+.text-grad-heading {
+  background: var(--grad-heading);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-grad-gold {
+  background: var(--grad-gold);
+}
+
+.btn-grad-gold {
+  background: var(--grad-gold);
+  background-size: 200% 200%;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-grad-gold:hover {
+  background-image: var(--grad-gold-hover);
+  background-position: right center;
+  box-shadow: 0 10px 30px -10px rgba(176,138,62,0.45);
+  transform: translateY(-1.5px);
+}
+
+.bg-grad-rose-gold {
+  background: var(--grad-rose-gold);
+}
+
+.bg-grad-champagne {
+  background: var(--grad-champagne-panel);
+}
+
+.bg-grad-card {
+  background: var(--grad-card-surface);
+}
+
+.bg-grad-warm {
+  background: var(--grad-section-warm);
+}
+
+.bg-grad-cool {
+  background: var(--grad-section-cool);
+}
+
+.bg-grad-footer {
+  background: var(--grad-footer);
+}
+
+/* Gradient Borders */
+.border-grad {
+  border: 1px solid transparent;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* 1px Gradient Divider */
+.divider-grad {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(176,138,62,0.4) 50%, transparent 100%);
+}
+
+/* Keyframes & Animations */
+@keyframes driftSlow {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -20px) scale(1.08);
+  }
+  66% {
+    transform: translate(-25px, 25px) scale(0.95);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes shineSweep {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  20%, 100% {
+    transform: translateX(250%) skewX(-20deg);
+  }
+}
+
+.animate-drift-slow {
+  animation: driftSlow 30s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spinSlow 8s linear infinite;
+}
+
+.animate-shimmer {
+  background: var(--grad-shimmer);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite linear;
+}
+
+.animate-shine {
+  animation: shineSweep 6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
