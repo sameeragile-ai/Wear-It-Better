@@ -2,25 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { ANNOUNCEMENT_MESSAGES } from '../constants';
+import { useStore } from '../context/StoreContext';
 
 export const AnnouncementBar: React.FC = () => {
+  const { isAnnouncementVisible, dismissAnnouncement } = useStore();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(() => {
-    return sessionStorage.getItem('wib_hide_announcement') !== 'true';
-  });
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isAnnouncementVisible) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % ANNOUNCEMENT_MESSAGES.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, [isVisible]);
-
-  const handleDismiss = () => {
-    setIsVisible(false);
-    sessionStorage.setItem('wib_hide_announcement', 'true');
-  };
+  }, [isAnnouncementVisible]);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
@@ -30,7 +24,7 @@ export const AnnouncementBar: React.FC = () => {
     }
   };
 
-  if (!isVisible) return null;
+  if (!isAnnouncementVisible) return null;
 
   const currentMessage = ANNOUNCEMENT_MESSAGES[currentIndex];
 
@@ -63,7 +57,7 @@ export const AnnouncementBar: React.FC = () => {
 
       <button
         type="button"
-        onClick={handleDismiss}
+        onClick={dismissAnnouncement}
         aria-label="Dismiss announcement"
         className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 p-1 text-[#2B2621]/60 hover:text-[#2B2621] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#8A6A2B]"
       >

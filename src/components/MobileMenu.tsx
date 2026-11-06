@@ -19,6 +19,16 @@ export const MobileMenu: React.FC = () => {
 
   useLockBody(isMobileMenuOpen);
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileMenuOpen, setIsMobileMenuOpen]);
+
   const navLinks = [
     { num: '01', label: 'Menswear', id: 'shop-menswear' },
     { num: '02', label: 'Studio Fragrances', id: 'fragrances' },

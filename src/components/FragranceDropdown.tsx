@@ -70,6 +70,8 @@ export const FragranceDropdown: React.FC<FragranceDropdownProps> = ({ onClose })
       transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
       className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[360px] p-3 rounded-2xl bg-white/95 backdrop-blur-2xl border border-[#EAE2D5] text-[#2B2621] shadow-warm-xl z-50 pointer-events-auto"
     >
+      {/* Invisible hover bridge to maintain hover state across the top gap */}
+      <div className="absolute -top-4 left-0 right-0 h-4 pointer-events-auto" aria-hidden="true" />
       <div className="px-3 py-2 border-b border-[#EAE2D5] mb-1 flex items-center justify-between">
         <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#8A6A2B]">
           Artisanal Parfums

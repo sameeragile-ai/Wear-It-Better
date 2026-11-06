@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { MegaMenu } from './MegaMenu';
@@ -11,6 +11,7 @@ interface NavLinksProps {
 export const NavLinks: React.FC<NavLinksProps> = ({ activeSection }) => {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [openDropdown, setOpenDropdown] = useState<'menswear' | 'fragrances' | null>(null);
+  const navRef = useRef<HTMLElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const links = [
@@ -21,13 +22,35 @@ export const NavLinks: React.FC<NavLinksProps> = ({ activeSection }) => {
     { label: 'Contact', id: 'contact' },
   ];
 
+  // Close dropdown on Escape key or click outside
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpenDropdown(null);
+      }
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleMouseEnter = (linkId: string, type?: 'menswear' | 'fragrances') => {
     if (timerRef.current) clearTimeout(timerRef.current);
     setHoveredLink(linkId);
     if (type) {
       timerRef.current = setTimeout(() => {
         setOpenDropdown(type);
-      }, 120); // 120ms hover intent
+      }, 100); // 100ms hover intent
     } else {
       setOpenDropdown(null);
     }
@@ -38,20 +61,27 @@ export const NavLinks: React.FC<NavLinksProps> = ({ activeSection }) => {
     timerRef.current = setTimeout(() => {
       setHoveredLink(null);
       setOpenDropdown(null);
-    }, 150);
+    }, 200);
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string, type?: 'menswear' | 'fragrances') => {
+    if (type && openDropdown !== type) {
+      // Toggle dropdown open on mobile / touch if clicked
+      e.preventDefault();
+      setOpenDropdown(type);
+      return;
+    }
     setOpenDropdown(null);
     const element = document.getElementById(id);
     if (element) {
+      e.preventDefault();
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
     <nav
+      ref={navRef}
       aria-label="Main"
       className="relative flex items-center gap-1 xl:gap-2"
       onMouseLeave={handleMouseLeave}
@@ -59,19 +89,17 @@ export const NavLinks: React.FC<NavLinksProps> = ({ activeSection }) => {
       {links.map((link) => {
         const isActive = activeSection === link.id;
         const isHovered = hoveredLink === link.id;
+        const type = link.hasMegaMenu ? 'menswear' : link.hasDropdown ? 'fragrances' : undefined;
 
         return (
           <div
             key={link.id}
             className="relative"
-            onMouseEnter={() => {
-              const type = link.hasMegaMenu ? 'menswear' : link.hasDropdown ? 'fragrances' : undefined;
-              handleMouseEnter(link.id, type);
-            }}
+            onMouseEnter={() => handleMouseEnter(link.id, type)}
           >
             <a
               href={`#${link.id}`}
-              onClick={(e) => handleClick(e, link.id)}
+              onClick={(e) => handleClick(e, link.id, type)}
               aria-haspopup={link.hasMegaMenu || link.hasDropdown ? 'true' : undefined}
               aria-expanded={
                 link.hasMegaMenu && openDropdown === 'menswear'
@@ -80,7 +108,11 @@ export const NavLinks: React.FC<NavLinksProps> = ({ activeSection }) => {
                   ? true
                   : undefined
               }
-              className={`relative z-10 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-colors duration-200 flex items-center gap-1 whitespace-nowrap shrink-0 ${
+              onFocus={() => {
+                setHoveredLink(link.id);
+                if (type) setOpenDropdown(type);
+              }}
+              className={`relative z-10 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-colors duration-200 flex items-center gap-1 whitespace-nowrap shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8A6A2B] ${
                 isActive
                   ? 'text-grad-heading font-bold'
                   : 'text-[#2B2621]/80 hover:text-[#2B2621]'

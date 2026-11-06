@@ -73,6 +73,8 @@ export const CartButton: React.FC = () => {
             transition={{ duration: 0.18 }}
             className="hidden lg:block absolute right-0 top-full mt-3 w-72 p-4 rounded-2xl bg-white/95 backdrop-blur-2xl border border-[#EAE2D5] text-[#2B2621] shadow-warm-xl z-50 pointer-events-auto"
           >
+            {/* Invisible hover bridge */}
+            <div className="absolute -top-4 left-0 right-0 h-4 pointer-events-auto" aria-hidden="true" />
             <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-[#EAE2D5]">
               <span className="text-[11px] font-bold tracking-wider uppercase text-[#8A6A2B]">
                 Shopping Bag ({cartCount})

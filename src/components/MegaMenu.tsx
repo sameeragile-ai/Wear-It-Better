@@ -71,6 +71,8 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ onClose }) => {
         boxShadow: '0 20px 50px -15px rgba(120,90,40,0.22), 0 2px 10px rgba(43,38,33,0.04)',
       }}
     >
+      {/* Invisible hover bridge to maintain hover state across the top gap */}
+      <div className="absolute -top-4 left-0 right-0 h-4 pointer-events-auto" aria-hidden="true" />
       <div className="grid grid-cols-12 gap-6">
         {/* Left Column: 3 Category Cards */}
         <div className="col-span-7 flex flex-col justify-between pr-4 border-r border-[#EAE2D5]">

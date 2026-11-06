@@ -38,6 +38,10 @@ interface StoreContextType {
   addRecentSearch: (query: string) => void;
   clearRecentSearches: () => void;
 
+  // Announcement
+  isAnnouncementVisible: boolean;
+  dismissAnnouncement: () => void;
+
   // Modals & Drawers
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
@@ -121,6 +125,22 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return ['Oud', 'Kurta', 'Waistcoat', 'Dark Elixir'];
     }
   });
+
+  // Announcement Bar visibility
+  const [isAnnouncementVisible, setIsAnnouncementVisible] = useState(() => {
+    try {
+      return sessionStorage.getItem('wib_hide_announcement') !== 'true';
+    } catch {
+      return true;
+    }
+  });
+
+  const dismissAnnouncement = useCallback(() => {
+    setIsAnnouncementVisible(false);
+    try {
+      sessionStorage.setItem('wib_hide_announcement', 'true');
+    } catch {}
+  }, []);
 
   // UI state
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -376,6 +396,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     recentSearches,
     addRecentSearch,
     clearRecentSearches,
+    isAnnouncementVisible,
+    dismissAnnouncement,
     isCartOpen,
     setIsCartOpen,
     isWishlistOpen,
